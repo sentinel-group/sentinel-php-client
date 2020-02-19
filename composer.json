@@ -1,0 +1,9 @@
+{
+    "name": "alibaba/sentinel",
+    "description": "sentinel php client (with sidecar).",
+    "type": "library",
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "apache/thrift": "^0.13.0"
+    }
+}
