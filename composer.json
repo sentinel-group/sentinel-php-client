@@ -1,6 +1,6 @@
 {
     "name": "alibaba/sentinel",
-    "description": "sentinel php client (with sidecar).",
+    "description": "sentinel php client (use sidecar).",
     "type": "library",
     "require": {
         "php": "^5.5 || ^7.0",
