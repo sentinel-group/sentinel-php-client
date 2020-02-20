@@ -39,6 +39,6 @@ class SentinelEntry
 
     public function __destruct()
     {
-        $this->client_->exit($this->id_);
+        $this->client_->close($this->id_);
     }
 }
