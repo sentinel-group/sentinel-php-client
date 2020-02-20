@@ -10,9 +10,17 @@ namespace php  Sentinel.Rpc
 **/
 service SentinelRpc {
 
+	/*
+	* 获取资源。
+	**/
 	i32 entry(1:string name) throws ( 1:sentinelClient.BlockException ex );
 
-	// TODO "exit" 是 php 关键字, php 7.0 才支持使用其作为自定义名字. 要支持 php 5.5 则需要改名 ?
-	void exit(1:i32 id);
+	/**
+	* 释放资源。
+	*
+	* java 使用 "exit", 但 "exit" 是 php 关键字, php 7.0 才支持使用其作为自定义名字.
+	* 修改为使用 "close" 以增强兼容性。
+	**/
+ 	void close(1:i32 id);
 
 }
