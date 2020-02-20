@@ -3,7 +3,7 @@
     "description": "sentinel php client (use sidecar).",
     "type": "library",
     "require": {
-        "php": "^5.5 || ^7.0",
+        "php": "^7.0",
         "apache/thrift": "^0.13.0"
     }
 }
