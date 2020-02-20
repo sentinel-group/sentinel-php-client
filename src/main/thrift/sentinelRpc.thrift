@@ -12,7 +12,7 @@ service SentinelRpc {
 
 	i32 entry(1:string name) throws ( 1:sentinelClient.BlockException ex );
 
-	// TODO "exit" 在 php 中是关键字, php 7.0 才支持使用此作为自定义名字. 要支持 php 5.5 则需要改名 ?
+	// TODO "exit" 是 php 关键字, php 7.0 才支持使用其作为自定义名字. 要支持 php 5.5 则需要改名 ?
 	void exit(1:i32 id);
 
 }
