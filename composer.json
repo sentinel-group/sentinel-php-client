@@ -5,5 +5,13 @@
     "require": {
         "php": "^7.0",
         "apache/thrift": "^0.13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sentinel\\": "src/main/php/"
+        },
+        "psr-0": {
+            "": "target/php/"
+        }
     }
 }
