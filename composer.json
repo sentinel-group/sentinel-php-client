@@ -8,10 +8,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Sentinel\\": "src/main/php/"
+            "Sentinel\\": "./"
         },
         "psr-0": {
-            "": "target/php/"
+            "": "thrift-gen/"
         }
     }
 }
