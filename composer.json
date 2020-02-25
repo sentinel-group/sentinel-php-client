@@ -1,5 +1,5 @@
 {
-    "name": "alibaba/sentinel",
+    "name": "sentinel/sentinel",
     "description": "sentinel php client (use sidecar).",
     "type": "library",
     "require": {
