@@ -1,5 +1,5 @@
 {
-    "name": "sentinel/sentinel",
+    "name": "ahas/sentinel",
     "description": "sentinel php client (use sidecar).",
     "type": "library",
     "require": {
