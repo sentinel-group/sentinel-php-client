@@ -9,10 +9,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Sentinel\\": "./"
-        },
-        "psr-0": {
-            "": "thrift-gen/"
+            "Sentinel\\": [
+                "./",
+                "thrift-gen/Sentinel/"
+            ]
         }
     }
 }
