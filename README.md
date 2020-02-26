@@ -50,7 +50,7 @@ composer require ahas/sentinel dev-master --prefer-dist
 ```
 
 >sentinel php 客户端暂未发布正式版本，暂安装 `dev-master` 开发版本，
->使用 `--prefer-dist` 选项安装发行版本，以便从镜像站点加速下载。
+>使用 `--prefer-dist` 选项安装打包分发版本，以便从镜像站点加速下载。
 
 通常在 PHP 源码文件头部引入 composer autoload 文件，以支持自动加载 PHP 类。类似如下代码：
 
