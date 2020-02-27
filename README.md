@@ -126,10 +126,10 @@ try {
 >PHP 中 try 子句与 finally 子句作用域相同。
 >即使在 try 子句中获取入口对象失败，在 finally 子句中将变量置为 null 也不会有副作用。
 
-### 添加限流降级处理
+### 添加限流处理
 
-请求压力超过限制时， `entry()` 方法将抛出 `BlockException` 异常，阻止继续执行受保护的代码块，避免压垮后端系统。
-此时可在 try 语句添加捕获此异常的 catch 子句，添加降级处理逻辑，如提示用户稍后再试等，让用户快速得到反馈提示。
+请求压力超过限制时， `entry()` 方法抛出 `BlockException` 异常，阻止继续执行受保护的代码块，避免压垮后端系统。
+此时可在 try 语句添加捕获此异常的 catch 子句，添加限流处理逻辑，如提示用户稍后再试等，让用户快速得到反馈提示。
 这样即保护了后端系统 (挡住流量洪峰)，又可以改善前端用户的体验。
 
 修改之后的 `index.php` 文件完整代码示例如下：
@@ -150,7 +150,7 @@ try {
 	echo "Killer Business!\n";
 	usleep(200 * 1000);
 } catch (\Sentinel\BlockException $e) {
-	// 请求压力超过限制, 降级处理, 提示用户稍后再试。
+	// 请求压力超过限制, 提示用户稍后再试。
 	echo "Online user FULL! Try later...\n";
 } finally {
     // 将保存入口对象的变量置为 null, 使不再有变量引用入口对象, 以销毁入口对象并释放资源。
@@ -178,7 +178,7 @@ PHP Fatal error:  Uncaught Thrift\Exception\TException: TSocket: Could not conne
 
 这是因为连接 Sentinel sidecar 失败，请确认启动 sidecar 进程。可启动 demo 以使用 demo 中的 sidecar 进行测试。
 
-连续多次执行脚本，测试超出压力后的限流降级场景，可看到类似如下输出：
+连续多次执行脚本，测试超出压力限制时的场景，可看到类似如下输出：
 
 ```text
 $ for e in $(seq 5) ; do php index.php ; done
@@ -205,6 +205,13 @@ docker run --name=demo --net=host -v "${MY_PHP_APP}:/app/php" -d registry.cn-han
 
 demo 容器启动后，通过浏览器访问 http://localhost:8080/ 页面，即可看到你的 php 项目在浏览器中的运行结果。
 
-## 接入 AHAS
+现在我们只是在本地环境进行了简单测试。
+接入 AHAS Sentinel 控制台，我们可以进一步体验 Sentinel 简单、直观、强大的流量防护能力。
+
+## 接入 AHAS Sentinel 控制台
+
+AHAS Sentinel 控制台是阿里云 AHAS (应用高可用服务) 提供的企业级 Sentinel 控制台云服务。
+
+
 
 ## 配置限流规则
