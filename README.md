@@ -33,7 +33,7 @@ demo 主页是一个简单的测试页面，快速连续点击 **请求** 按钮
 
 准备在您的 PHP 项目中试用 Sentinel，棒！
 首先梳理需要保护的资源，如数据库访问或后端 RPC 接口等，为资源取一个简单清晰的名字，配置流控规则。
-如何配置流控规则，我们稍后再说，这里先以 demo 中的 `hello` 资源为例。接下来，show me the code 。
+这里先以 demo 中的 `hello` 资源为例。接下来，show me the code 。
 
 ### 添加 Sentinel 依赖
 
@@ -92,7 +92,7 @@ try {
 }
 ```
 
-受保护的资源在 Sentinel 中用资源名 (如 "hello") 抽象表示，
+为受保护的资源取一个名字，命名尽量简单清晰，这里使用 `hello` 为例。
 执行受保护的代码前，即 try 语句开头，添加调用 `entry()` 方法获取资源访问入口。
 该方法返回一个抽象表示资源正在被用户锁定访问的 SentinelEntry 对象 (简称入口对象) 。
 如配置一个资源最多被 10 个用户同时访问，10 个用户同时访问时即存在 10 个入口对象锁定资源，此时第 11 个用户请求将被拒绝。
@@ -210,7 +210,9 @@ demo 容器启动后，通过浏览器访问 http://localhost:8080/ 页面，即
 
 ## 接入 AHAS Sentinel 控制台
 
-AHAS Sentinel 控制台是阿里云 AHAS (应用高可用服务) 提供的企业级 Sentinel 控制台云服务。
+AHAS Sentinel 控制台是阿里云 AHAS  提供的企业级 Sentinel 控制台云服务。
+
+登录阿里云 [AHAS (应用高可用服务) 控制台](https://ahas.console.aliyun.com/) 页面，
 
 
 
