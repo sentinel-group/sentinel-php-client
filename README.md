@@ -33,7 +33,7 @@ demo 主页是一个简单的测试页面，快速连续点击 **请求** 按钮
 
 准备在您的 PHP 项目中试用 Sentinel，棒！
 首先梳理需要保护的资源，如数据库访问或后端 RPC 接口等，为资源取一个简单清晰的名字，配置流控规则。
-如何配置流控规则，稍后再介绍，这里先以 demo 中的 `hello` 资源为例。接下来，show me the code 。
+如何配置流控规则，我们稍后再说，这里先以 demo 中的 `hello` 资源为例。接下来，show me the code 。
 
 ### 添加 Sentinel 依赖
 
@@ -176,7 +176,7 @@ $ php index.php
 PHP Fatal error:  Uncaught Thrift\Exception\TException: TSocket: Could not connect to localhost:9090 (Connection refused [111])
 ```
 
-这是因为连接 Sentinel sidecar 失败，请求确认启动 sidecar 。可使用 demo 启动 sidecar 进行测试。
+这是因为连接 Sentinel sidecar 失败，请确认启动 sidecar 进程。可启动 demo 以使用 demo 中的 sidecar 进行测试。
 
 连续多次执行脚本，测试超出压力后的限流降级场景，可看到类似如下输出：
 
