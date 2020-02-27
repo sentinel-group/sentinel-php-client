@@ -110,7 +110,7 @@ $sentinelHelloEntry = $sentinel->entry("hello");
 
 ```php
 try {
-	// 获取受保护的资源入口。
+	// 获取受保护的资源访问入口。
 	// 注意: 必须定义一个变量保存入口对象, 否则入口对象将被自动销毁并释放资源。
 	$sentinelHelloEntry = $sentinel->entry("hello");
 
@@ -142,7 +142,7 @@ require_once __DIR__ . "/vendor/autoload.php";
 $sentinel = new \Sentinel\SentinelClient("localhost", 9090);
 
 try {
-	// 获取受保护的资源入口。
+	// 获取受保护的资源访问入口。
 	// 注意: 必须定义一个变量保存入口对象, 否则入口对象将被自动销毁并释放资源。
 	$sentinelHelloEntry = $sentinel->entry("hello");
 
