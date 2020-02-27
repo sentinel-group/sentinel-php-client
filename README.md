@@ -27,13 +27,13 @@ demo 中默认定义了一个名为 `hello` 的资源，保护该资源每秒钟
 页面 `/hello.php` 使用了该资源，每秒请求压力超过 3 次时，将提示超过压力的请求稍后再试。
 demo 主页是一个简单的测试页面，快速连续点击 **请求** 按钮向 `/hello.php` 页面发起请求，可看到类似如下的输出结果。
 
-![demo](demo/demo.png)
+![demo](doc/image/demo.png)
 
 ## 在 PHP 中使用 Sentinel
 
 准备在您的 PHP 项目中试用 Sentinel，棒！
-首先梳理需要保护的资源，如数据库访问或后端 RPC 接口等，为资源取一个简单清晰的名字，配置流控规则。
-这里先以 demo 中的 `hello` 资源为例。接下来，show me the code 。
+首先梳理需要保护的资源，如数据库访问或后端 RPC 接口等，为资源取一个简单清晰的名字。
+这里以 demo 中的 `hello` 资源为例。接下来，show me the code 。
 
 ### 添加 Sentinel 依赖
 
@@ -206,14 +206,81 @@ docker run --name=demo --net=host -v "${MY_PHP_APP}:/app/php" -d registry.cn-han
 demo 容器启动后，通过浏览器访问 http://localhost:8080/ 页面，即可看到你的 php 项目在浏览器中的运行结果。
 
 现在我们只是在本地环境进行了简单测试。
-接入 AHAS Sentinel 控制台，我们可以进一步体验 Sentinel 简单、直观、强大的流量防护能力。
+接入 AHAS Sentinel 控制台，可以进一步体验 Sentinel 简单、直观、强大的流量防护能力。
 
 ## 接入 AHAS Sentinel 控制台
 
-AHAS Sentinel 控制台是阿里云 AHAS  提供的企业级 Sentinel 控制台云服务。
+AHAS Sentinel 控制台是阿里云提供的企业级 Sentinel 控制台云服务。
+
+在阿里云专有网络 VPC 下部署应用时， Sentinel 客户端可自动接入 AHAS Sentinel 控制台。
+在本机测试运行 demo 时，通过公网接入 Sentinel 控制台，需要额外配置 license 用于身份校验。
+
+### 查询公网接入 license
 
 登录阿里云 [AHAS (应用高可用服务) 控制台](https://ahas.console.aliyun.com/) 页面，
+如果尚未开通 AHAS 服务，可免费开通。
 
+点击控制台左上角的地域列表，选择地域为 **公网** ，左侧导航栏选择 **流控降级 > 应用流控** 。
+当前未接入应用，可看到应用列表为空。点击右上角 **新应用接入** 按钮查看接入方式。
 
+![AHAS 应用流控](doc/image/ahas-empty.png)
 
-## 配置限流规则
+这里主要是为了查询公网接入需要的 license 参数，接入方式选择 **体验 Demo** ，即可看到 license 参数。
+我们使用 sentinel-php-demo 镜像，无需下载 Java demo 。
+复制记录下 license 参数， **license 是用户机密信息，请注意保密不要泄露** 。
+
+![AHAS 新应用接入](doc/image/ahas-join.png)
+
+### 启动 demo 应用
+
+为应用取一个简单清晰的应用名，这里我们使用 demo 。
+使用如下命令启动 demo 容器，注意将 `${license}` 替换为您实际的 license 参数值。
+
+```sh
+docker run --name=demo --net=host -d registry.cn-hangzhou.aliyuncs.com/ahas/sentinel-php-demo -Dahas.namespace=default -Dproject.name=demo -Dahas.license=${license}
+```
+
+>同样，您也可以在宿主机上部署您的 PHP 项目代码连接 demo 容器中的 sidecar ，
+>或在启动 demo 容器时添加 `-v "${MY_PHP_APP}:/app/php"` 选项使用您的 PHP 项目代码覆盖镜像中自带的 demo 测试代码。
+
+向 demo 页面 `/hello.php` 发起请求，触发对资源 hello 的访问流量。
+demo 镜像内有一个小工具 http_load ，可直接在 demo 容器中使用此工具发起测试，
+如测试每秒钟发起 20 个请求，操作命令如下：
+
+```sh
+docker exec -it demo bash -c "echo http://localhost:8080/hello.php > /tmp/url.txt && http_load -rate 5 -seconds 30 /tmp/url.txt"
+```
+
+应用接入页面点击 **我已完成上述步骤** ，回到应用列表页面。
+稍等即可看到刚刚接入的 demo 应用，同时直观清晰的展示了应用访问资源的 QPS 曲线图。
+接入 Sentinel 控制台后，限流规则在控制台上配置，当前尚未配置限流规则，
+因此可看到当前通过 QPS 稳定为 20 ，拒绝 QPS 为 0 。
+
+![AHAS demo 应用](doc/image/ahas-demo-raw.png)
+
+### 配置限流规则
+
+点击应用卡片进入应用详情页，左侧菜单选择 **规则管理** ，右侧页面点击 **新增流控规则按钮** 。
+
+![AHAS 规则管理](doc/image/ahas-demo-rule-empty.png)
+
+**资源名称** 填写在代码中使用的资源名称，如这里 demo 中使用 hello ，**QPS阈值** 尝试填写为 15 进行测试。
+点击 **新建** 按钮完成配置。
+
+![AHAS 添加规则](doc/image/ahas-demo-rule-new-raw.png)
+
+回到应用列表页，很快将看到通过 QPS 被限制为 15 ，即上述配置的 QPS 阈值，
+同时拒绝 QPS 变成 5，每秒钟有 5 个超出压力限制的请求被挡掉。
+
+![AHAS demo QPS 限流](doc/image/ahas-demo-block-raw.png)
+
+点击应用卡片，查看监控详情，除了应用整体 QPS 等概览监控外，
+还可以查看接口 (资源) 维度、机器维度的各种监控详情。
+
+## 更多
+
+Sentinel 是面向分布式服务架构的专业流量控制组件，以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保障业务的稳定性。
+AHAS Sentinel 控制台提供企业级的控制台服务，提供简单、直观的动态规则管理/推送，丰富的实时监控数据展示，告警等功能。
+Sentinel PHP 客户端旨在帮助 PHP 应用快速接入使用 Sentinel ，采用“轻”客户端模式，使用 sidecar 复用成熟稳定的已有代码。
+
+更多信息请参考 AHAS 应用流控降级相关文档： https://help.aliyun.com/document_detail/101132.html 。
