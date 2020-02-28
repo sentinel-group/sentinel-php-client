@@ -248,7 +248,7 @@ demo 镜像内有一个小工具 http_load ，可直接在 demo 容器中使用�
 如测试每秒钟发起 20 个请求，操作命令如下：
 
 ```sh
-docker exec -it demo bash -c "echo http://localhost:8080/hello.php > /tmp/url.txt && http_load -rate 5 -seconds 300 /tmp/url.txt"
+docker exec -it demo bash -c "echo http://localhost:8080/hello.php > /tmp/url.txt && http_load -rate 20 -seconds 300 /tmp/url.txt"
 ```
 
 应用接入页面点击 **我已完成上述步骤** ，回到应用列表页面。
