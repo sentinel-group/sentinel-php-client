@@ -18,6 +18,22 @@ use Thrift\Transport\TSocket;
 class SentinelClient
 {
     /**
+     * 当前进程 PID 。
+     * @var int
+     */
+    protected $pid_ = null;
+
+    /**
+     * @var string
+     */
+    protected $addr_ = null;
+
+    /**
+     * @var bool
+     */
+    protected $persist_ = null;
+
+    /**
      * 底层 RPC 通信 socket 。
      *
      * @var TSocket
@@ -39,10 +55,18 @@ class SentinelClient
      */
     public function __construct(
         $host = 'localhost',
-        $port = 9090,
+        $port = -1,
         $persist = false
     )
     {
+        $this->pid_ = posix_getpid();
+        if ($port == -1) {
+            $this->addr_ = $host;
+        } else {
+            $this->addr_ = $host . ":" . "$port";
+        }
+        $this->persist_ = $persist;
+
         $this->socket_ = new TSocket($host, $port, $persist);
 
         $trans = new TFramedTransport($this->socket_);
@@ -61,6 +85,8 @@ class SentinelClient
     protected function ensureOpen() {
         if (!$this->socket_->isOpen()) {
             $this->socket_->open();
+            # 打印连接成功日志? 应使用调试日志并默认关闭, 避免频繁打印刷屏。
+            #error_log("PID=$this->pid_, SentinelClient(persist=$this->persist_) connected to sidecar $this->addr_ .");
         }
     }
 
@@ -83,7 +109,7 @@ class SentinelClient
             throw $e;
         } catch (\Exception $e) {
             // 捕获除 BlockException 之外的所有异常, 打印错误日志并返回 null 。
-            // TODO 打印错误日志
+            // TODO 打印错误日志, 使用 error_log() 函数还是 monolog 库 ?
             return null;
         }
     }
