@@ -59,12 +59,19 @@ class SentinelClient
         $persist = false
     )
     {
-        $this->pid_ = \posix_getpid();
+        // CentOS 上 posix_getpid 可能被移动到 php-process 软件包, 基础环境可能缺少此方法.
+        if (function_exists('\posix_getpid')) {
+            $this->pid_ = \posix_getpid();
+        } else if (function_exists('\getmypid')) {
+            $this->pid_ = \getmypid();
+        }
+
         if ($port == -1) {
             $this->addr_ = $host;
         } else {
             $this->addr_ = $host . ":" . "$port";
         }
+
         $this->persist_ = $persist;
 
         $this->socket_ = new TSocket($host, $port, $persist);
