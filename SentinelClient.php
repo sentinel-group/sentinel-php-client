@@ -59,7 +59,7 @@ class SentinelClient
         $persist = false
     )
     {
-        $this->pid_ = posix_getpid();
+        $this->pid_ = \posix_getpid();
         if ($port == -1) {
             $this->addr_ = $host;
         } else {
