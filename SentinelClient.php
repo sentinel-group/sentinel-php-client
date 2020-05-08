@@ -99,7 +99,7 @@ class SentinelClient
      * @param string $name 资源名称
      * @return SentinelEntry
      *      流控通过时返回资源访问入口对象。
-     *      系统异常 (如连接服务器失败等情况) 时返回 null, 此时流控防护失效。
+     *      客户端异常 (如连接服务器失败等情况) 时返回 null, 此时流控防护失效。
      * @throws BlockException 当前访问被限流时抛出 \Sentinel\BlockException 异常。
      */
     public function entry($name) {
