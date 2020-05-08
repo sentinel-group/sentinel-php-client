@@ -72,10 +72,33 @@ class SentinelClient
      *
      * @param string $name 资源名称
      * @return SentinelEntry
-     * @throws BlockException
-     * @throws TException
+     *      流控通过时返回资源访问入口对象。
+     *      系统异常 (如连接服务器失败等情况) 时返回 null, 此时流控防护失效。
+     * @throws BlockException 当前访问被限流时抛出 \Sentinel\BlockException 异常。
      */
     public function entry($name) {
+        try {
+            return $this->doEntry($name);
+        } catch (BlockException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            // 捕获除 BlockException 之外的所有异常, 打印错误日志并返回 null 。
+            // TODO 打印错误日志
+            return null;
+        }
+    }
+
+    /**
+     * 底层操作, 应用代码请使用 `entry($name)` 。
+     *
+     * @param string $name 资源名称
+     * @return SentinelEntry
+     * @throws BlockException
+     * @throws TException
+     * @throws TTransportException
+     * @see entry
+     */
+    protected function doEntry($name) {
         $this->ensureOpen();
         $id = $this->client_->entry($name);
         return new SentinelEntry($this->client_, $id);
