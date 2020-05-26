@@ -117,6 +117,7 @@ class SentinelClient
         } catch (\Exception $e) {
             // 捕获除 BlockException 之外的所有异常, 打印错误日志并返回 null 。
             // TODO 打印错误日志, 使用 error_log() 函数还是 monolog 库 ?
+            #error_log("SentinelClient error: $e");
             return null;
         }
     }
