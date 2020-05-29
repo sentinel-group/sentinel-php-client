@@ -56,7 +56,7 @@ class SentinelClient
     public function __construct(
         $host = 'localhost',
         $port = -1,
-        $persist = false
+        $persist = true
     )
     {
         // CentOS 上 posix_getpid 可能被移动到 php-process 软件包, 基础环境可能缺少此方法.
