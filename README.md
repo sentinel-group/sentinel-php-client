@@ -7,7 +7,7 @@ Sentinel PHP Client
 Linux 下可使用 docker 启动 demo ，启动命令如下 (选项 `--net=host` 表示容器使用宿主机网络)：
 
 ```sh
-docker run --name=demo --net=host -d registry.cn-hangzhou.aliyuncs.com/ahas/sentinel-php-demo
+docker run --name=demo --net=host -d registry.cn-hangzhou.aliyuncs.com/ahas/sentinel-php-demo demo/bin/demo.sh --local
 ```
 
 >使用结束后，使用如下命令删除 demo 容器：
@@ -200,7 +200,7 @@ Online user FULL! Try later...
 通过如下命令启动 demo 容器，即可使用您的 php 项目代码覆盖 demo 镜像中自带的测试代码。
 
 ```sh
-docker run --name=demo --net=host -v "${MY_PHP_APP}:/app/php" -d registry.cn-hangzhou.aliyuncs.com/ahas/sentinel-php-demo
+docker run --name=demo --net=host -v "${MY_PHP_APP}:/app/php" -d registry.cn-hangzhou.aliyuncs.com/ahas/sentinel-php-demo demo/bin/demo.sh --local
 ```
 
 demo 容器启动后，通过浏览器访问 http://localhost:8080/ 页面，即可看到你的 php 项目在浏览器中的运行结果。
@@ -237,7 +237,7 @@ AHAS Sentinel 控制台是阿里云提供的企业级 Sentinel 控制台云服�
 使用如下命令启动 demo 容器，注意将 `${license}` 替换为您实际的 license 参数值。
 
 ```sh
-docker run --name=demo --net=host -d registry.cn-hangzhou.aliyuncs.com/ahas/sentinel-php-demo -Dahas.namespace=default -Dproject.name=demo -Dahas.license=${license}
+docker run --name=demo --net=host -d registry.cn-hangzhou.aliyuncs.com/ahas/sentinel-php-demo demo/bin/demo.sh --app=demo --license=${license}
 ```
 
 >同样，您也可以在宿主机上部署您的 PHP 项目代码连接 demo 容器中的 sidecar ，
@@ -248,7 +248,7 @@ demo 镜像内有一个小工具 http_load ，可直接在 demo 容器中使用�
 如测试每秒钟发起 20 个请求，操作命令如下：
 
 ```sh
-docker exec -it demo bash -c "echo http://localhost:8080/hello.php > /tmp/url.txt && http_load -rate 20 -seconds 300 /tmp/url.txt"
+docker exec -it demo bash -c "echo http://localhost:8080/hello.php > /tmp/url.txt && http_load -rate 20 -seconds 10 /tmp/url.txt"
 ```
 
 应用接入页面点击 **我已完成上述步骤** ，回到应用列表页面。
