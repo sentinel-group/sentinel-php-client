@@ -2,8 +2,6 @@
 
 namespace Sentinel;
 
-use Sentinel\Rpc\SentinelRpcClient;
-
 /**
  * 受保护的资源访问入口。
  *
@@ -15,20 +13,20 @@ use Sentinel\Rpc\SentinelRpcClient;
 class SentinelEntry
 {
     /**
-     * @var SentinelRpcClient
+     * @var SentinelClient
      */
     protected $client_ = null;
 
     /**
      * @var int
      */
-    protected $id_ = null;
+    public $id_ = null;
 
     /**
      * SentinelEntry constructor.
      * 调用 SentinelClient.entry() 成功后返回此类对象。
      *
-     * @param SentinelRpcClient $client
+     * @param SentinelClient $client
      * @param int $id
      */
     public function __construct($client, $id)
@@ -39,6 +37,6 @@ class SentinelEntry
 
     public function __destruct()
     {
-        $this->client_->close($this->id_);
+        $this->client_->close($this);
     }
 }

@@ -117,7 +117,7 @@ class SentinelClient
         } catch (\Exception $e) {
             // 捕获除 BlockException 之外的所有异常, 打印错误日志并返回 null 。
             // TODO 打印错误日志, 使用 error_log() 函数还是 monolog 库 ?
-            #error_log("SentinelClient error: $e");
+            #error_log("SentinelClient entry() error: $e");
             return null;
         }
     }
@@ -135,6 +135,26 @@ class SentinelClient
     protected function doEntry($name) {
         $this->ensureOpen();
         $id = $this->client_->entry($name);
-        return new SentinelEntry($this->client_, $id);
+        return new SentinelEntry($this, $id);
+    }
+
+    /**
+     * @param $entry SentinelEntry
+     */
+    public function close($entry) {
+        $this->doClose($entry->id_);
+    }
+
+    /**
+     * @param $id int
+     */
+    protected function doClose($id) {
+        try {
+            $this->client_->close($id);
+        } catch (\Exception $e) {
+            // 捕获所有异常, 打印错误日志。
+            // TODO 打印错误日志, 使用 error_log() 函数还是 monolog 库 ?
+            #error_log("SentinelClient close() error: $e");
+        }
     }
 }
